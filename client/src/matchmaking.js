@@ -1,5 +1,6 @@
 function subset(arra, arra_size) {
-  var result_set = [], result;
+  var result_set = [],
+    result;
 
   for (var x = 0; x < Math.pow(2, arra.length); x++) {
     result = [];
@@ -19,10 +20,9 @@ function subset(arra, arra_size) {
 }
 
 function findComplementTeam(group, firstTeam) {
-  var complement = []
+  var complement = [];
   // console.log(firstTeam);
   group.forEach(function (player) {
-
     if (!firstTeam.includes(player)) {
       complement.push(player);
     }
@@ -38,7 +38,6 @@ function getRandom(arr, n) {
   if (n > len)
     throw new RangeError("getRandom: more elements taken than available");
   while (n--) {
-
     var x = Math.floor(Math.random() * len);
     result[n] = arr[x in taken ? taken[x] : x];
     taken[x] = --len in taken ? taken[len] : len;
@@ -46,6 +45,7 @@ function getRandom(arr, n) {
   return result;
 }
 
+export let currentMatch;
 
 /**
  * @param {{name:string, rating:number}[]} players
@@ -56,7 +56,7 @@ export function matchmakingBalanced(players, teamSize) {
 
   var possibleFirstTeams = subset(group, teamSize);
 
-  var possibleMatchups = []
+  var possibleMatchups = [];
 
   possibleFirstTeams.forEach(function (team) {
     possibleMatchups.push([team, findComplementTeam(group, team)]);
@@ -87,39 +87,24 @@ export function matchmakingBalanced(players, teamSize) {
   document.getElementById("team1").innerHTML = "";
   document.getElementById("team2").innerHTML = "";
   match[0].slice(0, teamSize).forEach(function (player) {
-    document.getElementById("team1").innerHTML += player.name + " - " + player.rating + "<br>";
+    document.getElementById("team1").innerHTML +=
+      player.name + " - " + player.rating + "<br>";
   });
 
-  document.getElementById("team1").innerHTML += "Total team MMR: " + match[0].at(-1);
+  document.getElementById("team1").innerHTML +=
+    "Total team MMR: " + match[0].at(-1);
 
   match[1].slice(0, teamSize).forEach(function (player) {
-    document.getElementById("team2").innerHTML += player.name + " - " + player.rating + "<br>";
+    document.getElementById("team2").innerHTML +=
+      player.name + " - " + player.rating + "<br>";
   });
-  document.getElementById("team2").innerHTML += "Total team MMR: " + match[1].at(-1);
-  return match[0] + "," + match[1];
-}
+  document.getElementById("team2").innerHTML +=
+    "Total team MMR: " + match[1].at(-1);
 
-var isAlpha = function (ch) {
-  return typeof ch === "string" && /[A-Za-z]/.test(ch);
-}
+  document.querySelectorAll(".victoryButton").forEach((button) => {
+    button.classList.remove("hidden");
+  });
 
-function matchmakingTest() {
-  var total = [];
-  for (var i = 0; i < 1000; i++) {
-    total.push(matchmakingBalanced());
-  }
-  var playersList = [];
-  for (var i = 0; i < total.length; i++) {
-    var list = total[i].split(",");
-    list.forEach(function (item) {
-      if (isAlpha(item)) {
-        playersList.push(item);
-      }
-    });
-  }
-  var occur = playersList.reduce(function (acc, curr) {
-    return acc[curr] ? ++acc[curr] : acc[curr] = 1, acc
-  }, {});
-  // console.log(occur);
-  return occur;
+  // console.log(match);
+  currentMatch = match;
 }

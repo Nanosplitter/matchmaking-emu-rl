@@ -1,8 +1,10 @@
-import { matchmakingBalanced } from "./matchmaking.js";
-import { currentPlayers } from "./firebase.js";
+import { matchmakingBalanced, currentMatch } from "./matchmaking.js";
+import { currentPlayers, addGame } from "./firebase.js";
 
 const playerList = document.querySelector("#playerList");
 const matchForm = document.querySelector("#matchForm");
+
+const team1VictoryButton = document.querySelector("#team1Victory");
 
 export function renderPlayerList() {
   playerList.innerHTML = [...currentPlayers.entries()]
@@ -24,7 +26,7 @@ matchForm.addEventListener("submit", (event) => {
 
   const players = formData
     .getAll("players")
-    .map((id) => currentPlayers.get(id));
+    .map((id) => ({ ...currentPlayers.get(id), _id: id }));
 
   const teamSize = formData.get("teamSize");
 
@@ -35,3 +37,22 @@ matchForm.addEventListener("submit", (event) => {
     alert(error);
   }
 });
+
+for (const button of document.querySelectorAll(".victoryButton")) {
+  button.addEventListener("click", () => {
+    const winningTeamNumber = parseInt(event.target.name);
+    const losingTeamNumber = winningTeamNumber ^ 1; // XOR with 1 | (1 -> 0, 0 -> 1)
+    const data = {
+      winners: currentMatch[winningTeamNumber].slice(
+        0,
+        currentMatch[winningTeamNumber].length - 1
+      ),
+      losers: currentMatch[losingTeamNumber].slice(
+        0,
+        currentMatch[losingTeamNumber].length - 1
+      ),
+    };
+    console.log(data);
+    addGame(data);
+  });
+}

@@ -9,6 +9,8 @@ import {
   query,
   orderBy,
   onSnapshot,
+  Timestamp,
+  addDoc,
 } from "firebase/firestore";
 
 import { renderPlayerList } from "./view.js";
@@ -38,9 +40,14 @@ const playersRef = collection(db, "players");
 export let currentPlayers;
 
 const q = query(playersRef, orderBy("name"));
-const querySnapshot = onSnapshot(q, (querySnapshot) => {
+onSnapshot(q, (querySnapshot) => {
   currentPlayers = new Map(
     querySnapshot.docs.map((playerRef) => [playerRef.id, playerRef.data()])
   );
   renderPlayerList();
 });
+
+export async function addGame(data) {
+  const docRef = await addDoc(collection(db, "games"), data);
+  console.debug("Document written with ID: ", docRef.id);
+}
