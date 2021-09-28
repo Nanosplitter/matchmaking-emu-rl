@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="./src/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script type="module" src="./src/main.js"></script>
+  <title>Vite App</title>
+</head>
+
+<body>
+  <h1>Players | Ratings</h1>
+  <form id="matchForm">
+    <div id="playerList">loading...</div>
+    <!-- <button id="newPlayer" type="button">New Player</button> -->
+
+    <p>Team Size</p>
+    <input type="number" id="teamSize" value="3" name="teamSize" />
+    <button id="makeMatch" type="submit">Make a Match</button>
+  </form>
+
+  <h1>Team 1:</h1>
+  <div id="team1"></div>
+  <h1>Team 2:</h1>
+  <div id="team2"></div>
+</body>
+
+</html>
