@@ -35,8 +35,7 @@ function getRandom(arr, n) {
   var result = new Array(n),
     len = arr.length,
     taken = new Array(len);
-  if (n > len)
-    throw new RangeError("getRandom: more elements taken than available");
+  if (n > len) throw new RangeError("getRandom: more elements taken than available");
   while (n--) {
     var x = Math.floor(Math.random() * len);
     result[n] = arr[x in taken ? taken[x] : x];
@@ -44,8 +43,6 @@ function getRandom(arr, n) {
   }
   return result;
 }
-
-export let currentMatch;
 
 /**
  * @param {{name:string, rating:number}[]} players
@@ -82,29 +79,5 @@ export function matchmakingBalanced(players, teamSize) {
     return a[2] - b[2];
   });
 
-  var match = possibleMatchups[0];
-
-  document.getElementById("team1").innerHTML = "";
-  document.getElementById("team2").innerHTML = "";
-  match[0].slice(0, teamSize).forEach(function (player) {
-    document.getElementById("team1").innerHTML +=
-      player.name + " - " + player.rating + "<br>";
-  });
-
-  document.getElementById("team1").innerHTML +=
-    "Total team MMR: " + match[0].at(-1);
-
-  match[1].slice(0, teamSize).forEach(function (player) {
-    document.getElementById("team2").innerHTML +=
-      player.name + " - " + player.rating + "<br>";
-  });
-  document.getElementById("team2").innerHTML +=
-    "Total team MMR: " + match[1].at(-1);
-
-  document.querySelectorAll(".victoryButton").forEach((button) => {
-    button.classList.remove("hidden");
-  });
-
-  // console.log(match);
-  currentMatch = match;
+  return possibleMatchups[0];
 }
