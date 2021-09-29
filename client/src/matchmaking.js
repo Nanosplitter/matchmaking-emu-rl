@@ -1,3 +1,5 @@
+import { html, render } from "lit";
+
 function subset(arra, arra_size) {
   var result_set = [],
     result;
@@ -35,8 +37,7 @@ function getRandom(arr, n) {
   var result = new Array(n),
     len = arr.length,
     taken = new Array(len);
-  if (n > len)
-    throw new RangeError("getRandom: more elements taken than available");
+  if (n > len) throw new RangeError("getRandom: more elements taken than available");
   while (n--) {
     var x = Math.floor(Math.random() * len);
     result[n] = arr[x in taken ? taken[x] : x];
@@ -84,22 +85,19 @@ export function matchmakingBalanced(players, teamSize) {
 
   var match = possibleMatchups[0];
 
-  document.getElementById("team1").innerHTML = "";
-  document.getElementById("team2").innerHTML = "";
-  match[0].slice(0, teamSize).forEach(function (player) {
-    document.getElementById("team1").innerHTML +=
-      player.name + " - " + player.rating + "<br>";
-  });
+  const team1Container = document.getElementById("team1");
+  const team2Container = document.getElementById("team2");
 
-  document.getElementById("team1").innerHTML +=
-    "Total team MMR: " + match[0].at(-1);
+  const teamResultTemplate = (players, totalMMR) => {
+    return html`
+      ${players.map((player) => html` <span>${player.name} - ${player.rating}</span><br />`)}
+      <span>Total team MMR: ${totalMMR}</span>
+    `;
+  };
 
-  match[1].slice(0, teamSize).forEach(function (player) {
-    document.getElementById("team2").innerHTML +=
-      player.name + " - " + player.rating + "<br>";
-  });
-  document.getElementById("team2").innerHTML +=
-    "Total team MMR: " + match[1].at(-1);
+  render(teamResultTemplate(match[0].slice(0, teamSize), match[0].at(-1)), team1Container);
+
+  render(teamResultTemplate(match[1].slice(0, teamSize), match[1].at(-1)), team2Container);
 
   document.querySelectorAll(".victoryButton").forEach((button) => {
     button.classList.remove("hidden");

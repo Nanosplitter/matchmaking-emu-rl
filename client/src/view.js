@@ -1,3 +1,4 @@
+import { html, render } from "lit";
 import { matchmakingBalanced, currentMatch } from "./matchmaking.js";
 import { currentPlayers, addGame } from "./firebase.js";
 
@@ -6,18 +7,21 @@ const matchForm = document.querySelector("#matchForm");
 
 const team1VictoryButton = document.querySelector("#team1Victory");
 
+render("loading...", playerList);
+
 export function renderPlayerList() {
-  playerList.innerHTML = [...currentPlayers.entries()]
-    .map(([id, player]) => {
-      return /*html*/ `
+  render(
+    [...currentPlayers.entries()].map(([id, player]) => {
+      return html`
         <label class="player">
-          <input type="checkbox" name="players" checked value="${id}"/>
+          <input type="checkbox" name="players" checked value="${id}" />
           <span>${player.name}</span>
           <span>${player.rating}</span>
         </label>
       `;
-    })
-    .join("");
+    }),
+    playerList
+  );
 }
 
 matchForm.addEventListener("submit", (event) => {
