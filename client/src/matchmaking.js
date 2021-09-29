@@ -1,5 +1,3 @@
-import { html, render } from "lit";
-
 function subset(arra, arra_size) {
   var result_set = [],
     result;
@@ -46,8 +44,6 @@ function getRandom(arr, n) {
   return result;
 }
 
-export let currentMatch;
-
 /**
  * @param {{name:string, rating:number}[]} players
  * @param {number} players
@@ -83,26 +79,5 @@ export function matchmakingBalanced(players, teamSize) {
     return a[2] - b[2];
   });
 
-  var match = possibleMatchups[0];
-
-  const team1Container = document.getElementById("team1");
-  const team2Container = document.getElementById("team2");
-
-  const teamResultTemplate = (players, totalMMR) => {
-    return html`
-      ${players.map((player) => html` <span>${player.name} - ${player.rating}</span><br />`)}
-      <span>Total team MMR: ${totalMMR}</span>
-    `;
-  };
-
-  render(teamResultTemplate(match[0].slice(0, teamSize), match[0].at(-1)), team1Container);
-
-  render(teamResultTemplate(match[1].slice(0, teamSize), match[1].at(-1)), team2Container);
-
-  document.querySelectorAll(".victoryButton").forEach((button) => {
-    button.classList.remove("hidden");
-  });
-
-  // console.log(match);
-  currentMatch = match;
+  return possibleMatchups[0];
 }
