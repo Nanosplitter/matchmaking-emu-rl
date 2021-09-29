@@ -32,7 +32,9 @@ export function renderPlayerList() {
 
 const teamResultTemplate = (players, totalMMR) => {
   return html`
-    ${players.map((player) => html` <span>${player.name} - ${player.rating}</span><br />`)}
+    ${players.map(
+      (player) => html` <span>${player.name} - ${player.rating}</span><br />`
+    )}
     <span>Total team MMR: ${totalMMR}</span>
   `;
 };
@@ -43,16 +45,35 @@ matchForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const formData = new FormData(matchForm);
 
-  const players = formData.getAll("players").map((id) => ({ ...currentPlayers.get(id), _id: id }));
+  const players = formData
+    .getAll("players")
+    .map((id) => ({ ...currentPlayers.get(id), _id: id }));
 
-  const teamSize = formData.get("teamSize");
+  let teamSize = formData.get("teamSize");
+
+  if (teamSize < 1) {
+    teamSize = 1;
+    document.querySelector("#teamSize").value = 1;
+  }
 
   try {
     currentMatch = matchmakingBalanced(players, teamSize);
 
-    render(teamResultTemplate(currentMatch[0].slice(0, teamSize), currentMatch[0].at(-1)), team1Container);
+    render(
+      teamResultTemplate(
+        currentMatch[0].slice(0, teamSize),
+        currentMatch[0].at(-1)
+      ),
+      team1Container
+    );
 
-    render(teamResultTemplate(currentMatch[1].slice(0, teamSize), currentMatch[1].at(-1)), team2Container);
+    render(
+      teamResultTemplate(
+        currentMatch[1].slice(0, teamSize),
+        currentMatch[1].at(-1)
+      ),
+      team2Container
+    );
 
     document.querySelectorAll(".victoryButton").forEach((button) => {
       button.classList.remove("hidden");
@@ -75,7 +96,7 @@ for (const button of document.querySelectorAll(".victoryButton")) {
       losers: currentMatch[losingTeamNumber].slice(
         0,
         currentMatch[losingTeamNumber].length - 1
-      ),
+      )
     };
     console.log(data);
     addGame(data);
