@@ -1,4 +1,5 @@
 import { html, render } from "lit";
+import { repeat } from "lit/directives/repeat.js";
 import { matchmakingBalanced, currentMatch } from "./matchmaking.js";
 import { currentPlayers, addGame } from "./firebase.js";
 
@@ -11,15 +12,19 @@ render("loading...", playerList);
 
 export function renderPlayerList() {
   render(
-    [...currentPlayers.entries()].map(([id, player]) => {
-      return html`
-        <label class="player">
-          <input type="checkbox" name="players" checked value="${id}" />
-          <span>${player.name}</span>
-          <span>${player.rating}</span>
-        </label>
-      `;
-    }),
+    repeat(
+      [...currentPlayers.entries()],
+      ([id, player]) => id,
+      ([id, player]) => {
+        return html`
+          <label class="player">
+            <input type="checkbox" name="players" checked value="${id}" />
+            <span>${player.name}</span>
+            <span>${player.rating}</span>
+          </label>
+        `;
+      }
+    ),
     playerList
   );
 }
